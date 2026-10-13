@@ -200,11 +200,8 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=tododb
 ```
 
 Al arrancar, el server crea la base si no existe (`CREATE DATABASE IF NOT EXISTS`)
 y aplica el esquema de `src/db/schema.sql` (tablas con `IF NOT EXISTS`, es
 idempotente), así que no hay que correr migraciones a mano.
-
-> A diferencia de una base en memoria, los datos **persisten entre reinicios**.

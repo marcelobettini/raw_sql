@@ -10,7 +10,7 @@ import { setAccessCookie } from "../utils/cookies.js";
 // una variable de entorno independiente, cambiar una sin la otra dejaría un
 // JWT válido por más tiempo del que dura su cookie (o viceversa) -una
 // fuente de bugs difícil de notar. Tampoco es un valor que típicamente
-// varíe por entorno de despliegue, a diferencia de PORT/DB_NAME/los
+// varíe por entorno de despliegue, a diferencia de PORT/los
 // secrets. Si se cambia acá, hay que actualizar también ACCESS_MAX_AGE_MS
 // en src/utils/cookies.js.
 const ACCESS_TOKEN_TTL_SECONDS = 12 * 60 * 60; // 12 horas

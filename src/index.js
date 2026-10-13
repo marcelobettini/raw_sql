@@ -12,7 +12,7 @@ import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { attachUser } from './middleware/auth.js';
 // El .env ya no es obligatorio para arrancar en dev: PORT tiene default y la
-// conexión a MySQL usa defaults locales (DB_HOST/DB_USER/DB_NAME), aunque sí
+// conexión a MySQL usa defaults locales (DB_HOST/DB_USER), aunque sí
 // necesita un MySQL corriendo. Si no existe el archivo, seguimos sin fallar.
 try {
     process.loadEnvFile();

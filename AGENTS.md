@@ -42,8 +42,8 @@ No linter or formatter is configured. `package.json` declares `packageManager: y
    - `requireAuth` — mounted per-route on protected endpoints. Assumes `attachUser` already ran.
    Session = a single 12h JWT in an httpOnly cookie. **No refresh token, no server-side session state, nothing to revoke.** `logout` intentionally has no `requireAuth` (an expired token must still be clearable).
 
-6. **Password secrecy is layered** (rationale in `DB-PASSWORD-PROTECTION-LAYERS.md`):
-   - `userRepository.js` exposes a `PUBLIC_COLUMNS` list that never includes `password_hash` (the SQL equivalent of `select: false`); only `findByEmailWithPassword` opts in explicitly.
+6. **Password secrecy is layered** (three layers, no Mongoose):
+   - `src/services/userService.js` defines a `PUBLIC_COLUMNS` list that never includes `password_hash` (the SQL equivalent of `select: false`); only `findByEmailWithPassword` opts in explicitly.
    - The login route strips it from the object before responding (`const { passwordHash, ...publicUser } = user`), the equivalent of the old `toJSON` transform.
    Keep both. `src/services/userService.js` must stay JWT/cookie-free; `src/services/authService.js` must stay persistence-free.
 
@@ -61,9 +61,10 @@ No linter or formatter is configured. `package.json` declares `packageManager: y
 
 - **Language:** source comments, README, and commit messages are Spanish (highly explanatory style — comments explain *why*, not *what*). Keep new comments in Spanish to match. This file is English per agent-facing convention; translate if the team prefers.
 - **Commits:** Conventional Commits (`feat:`, `docs:`, ...).
-- **Layering:** `routes/` = HTTP + validation only; `services/` = business logic (no SQL); `repositories/` = raw SQL + row→API mapping (camelCase, `id`); `db/` = pool/connection + `schema.sql`; `middleware/` = cross-cutting; `errors/AppError.js` = operational errors.
+- **Layering:** `routes/` = HTTP + validation only; `services/` = business logic **+ raw SQL** (deliberately *no* repository layer — see below); `db/` = pool/connection + `schema.sql`; `middleware/` = cross-cutting; `errors/AppError.js` = operational errors.
+- **No repository pattern (on purpose).** The SQL lives directly in `services/` so a request's whole path is readable in one file. This is an educational simplification, not the recommended structure: a real project would extract a repository layer for separation of concerns, testability, swappable storage and centralized row→object mapping. The full rationale is in the header comment of `src/services/taskService.js`. Do not "fix" this without being asked.
 - **Validation** is manual in route handlers (trim, check, throw `AppError`) — there is no validation library; input is validated before it reaches SQL.
-- **API responses** use `id` (numeric, never `_id`) and camelCase field names — the SQL aliases in `src/repositories/` guarantee this.
+- **API responses** use `id` (numeric, never `_id`) and camelCase field names — the SQL aliases in `src/services/` guarantee this.
 - **Docs:** `README.md` covers only `/tasks` + `/health` (in Spanish). The auth endpoints are documented only in the OpenAPI spec (`src/docs/openapi.js`) — update that file when endpoints change; it is hand-written, not generated.
 
 ## Gotchas / known gaps

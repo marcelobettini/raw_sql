@@ -4,7 +4,7 @@
 --
 -- Convenciones:
 -- - snake_case en las columnas; el renombre a camelCase para la API lo hace el
---   alias de SQL en los repositories (first_name AS firstName, etc.).
+--   alias de SQL en los servicios (first_name AS firstName, etc.).
 -- - created_at/updated_at los mantiene la base sola (DEFAULT CURRENT_TIMESTAMP
 --   y ON UPDATE CURRENT_TIMESTAMP): no los escribe la aplicación.
 -- - utf8mb4 para soportar acentos y emoji en title/description.
